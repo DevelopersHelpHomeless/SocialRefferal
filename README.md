@@ -1,4 +1,4 @@
-# SocialDirectory
+# SocialRefferal
 
 A fully Open Source Project under MIT Licence : 
 
