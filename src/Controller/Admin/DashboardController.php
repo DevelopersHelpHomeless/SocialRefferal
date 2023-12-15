@@ -97,7 +97,8 @@ class DashboardController extends AbstractDashboardController
 
     public function configureAssets(): Assets
     {
-        $assets = Assets::new()->addJsFile('https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA4CDlFCYEsHZPQ2G4FWI8Hypt0QGKWn8I');
+        $key = $this->getParameter('gmaps_api_key');
+        $assets = Assets::new()->addJsFile("https://maps.googleapis.com/maps/api/js?libraries=places&key={$key}");
         return $assets->addJsFile('js/location-google-autocomplete.js');
     }
 }
