@@ -3,10 +3,9 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Assoc;
-use App\Entity\Categorie;
-use App\Entity\SousCategorie;
-use App\Form\CategoriesType;
+use App\Field\PlaceSearchField;
 use App\Form\OuvertureType;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -14,13 +13,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\FileUploadType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-
+use EasyCorp\Bundle\EasyAdminBundle\Field\HiddenField;
 
 class AssocCrudController extends AbstractCrudController
 {
@@ -39,6 +37,8 @@ class AssocCrudController extends AbstractCrudController
     {
         return [
             IdField::new('id')->hideOnForm(),
+            PlaceSearchField::new('searchOnMaps', 'Rechercher une association')->onlyOnForms(),
+            FormField::addPanel(' ')->onlyOnForms(),
             AssociationField::new('ville'),
             TextField::new('nom'),
             TextEditorField::new('description'),
@@ -87,7 +87,12 @@ class AssocCrudController extends AbstractCrudController
                 ->setFormTypeOptions([
                     'by_reference' => 'false'
                 ]),
+            HiddenField::new('placeId'),
         ];
     }
 
+    public function configureAssets(Assets $assets): Assets
+    {
+        return $assets->addJsFile('js/admin/assoc-crud.js');
+    }
 }
