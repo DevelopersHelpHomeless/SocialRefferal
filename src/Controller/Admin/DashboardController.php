@@ -6,9 +6,11 @@ use App\Entity\AnnuaireCategorie;
 use App\Entity\AnnuaireOrganisme;
 use App\Entity\Assoc;
 use App\Entity\Categorie;
+use App\Entity\Country;
 use App\Entity\Gpx;
 use App\Entity\Maraude;
 use App\Entity\SousCategorie;
+use App\Entity\State;
 use App\Entity\User;
 use App\Entity\Ville;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
@@ -73,6 +75,9 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Sous-catégorie', 'fas fa-list-alt', SousCategorie::class)
             ->setDefaultSort(['ordre' => 'ASC']);
         yield MenuItem::linkToCrud('Ville', 'fas fa-city', Ville::class);
+        yield MenuItem::linkToCrud('State', 'fas fa-city', State::class);
+        yield MenuItem::linkToCrud('Country', 'fas fa-city', Country::class);
+
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-users', User::class);
 
         yield MenuItem::section('Annuaire');
