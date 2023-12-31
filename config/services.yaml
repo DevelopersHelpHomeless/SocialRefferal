@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
   locale: 'fr'
-  gmaps_api_key: '%env(GMAPS_API_KEY)%'
+  gmaps_api_key: '%env(GOOGLE_MAPS_API_KEY)%'
 
 services:
   # default configuration for services in *this* file

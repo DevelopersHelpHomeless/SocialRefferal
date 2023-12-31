@@ -37,8 +37,14 @@ class AssocCrudController extends AbstractCrudController
     {
         return [
             IdField::new('id')->hideOnForm(),
-            PlaceSearchField::new('searchOnMaps', 'Rechercher une association')->onlyOnForms(),
-            FormField::addPanel(' ')->onlyOnForms(),
+            PlaceSearchField::new('searchAssocByPlace', 'Rechercher par lieu')
+                ->onlyOnForms()
+                ->setColumns(6),
+            PlaceSearchField::new('searchAssocByPlaceId', 'Rechercher par id GMB')
+                ->onlyOnForms()
+                ->setColumns(3),
+            FormField::addPanel(' ')
+                ->onlyOnForms(),
             AssociationField::new('ville'),
             TextField::new('nom'),
             TextEditorField::new('description'),

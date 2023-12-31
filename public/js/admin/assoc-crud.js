@@ -1,20 +1,29 @@
 function initSearchPlaceFieldAutocomplete() {
-    var searchPlaceField = document.getElementById("Assoc_searchOnMaps");
+    var searchPlaceField = document.getElementById("Assoc_searchAssocByPlace");
     var autocomplete = new google.maps.places.Autocomplete(searchPlaceField, {
         componentRestrictions: { country: ["fr"] },
         fields: [
             "place_id",
-            "name",
-            "formatted_address",
-            "business_status",
-            "formatted_phone_number",
-            "geometry",
-            "opening_hours",
-            "address_components",
         ],
         types: ["establishment"],
     });
-    autocomplete.addListener("place_changed", fillInAssoc);
+    autocomplete.addListener("place_changed", function () {
+        var place = autocomplete.getPlace();
+        if (place.place_id) {
+            getPlaceDetails(place.place_id);
+        }
+    });
+
+    var searchAssocByPlaceId = document.getElementById('Assoc_searchAssocByPlaceId');
+
+    if (searchAssocByPlaceId) {
+        searchAssocByPlaceId.addEventListener('blur', function () {
+            var placeId = searchAssocByPlaceId.value.trim();
+            if (placeId !== '') {
+                getPlaceDetails(placeId);
+            }
+        });
+    }
 }
 
 function getLocalityFromAdressComponents(components) {
@@ -22,14 +31,28 @@ function getLocalityFromAdressComponents(components) {
     return localityComponent ? localityComponent.long_name : null;
 }
 
-function fillInAssoc() {
-    var place = this.getPlace();
+function getPlaceDetails(placeId) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/places/' + encodeURIComponent(placeId), true);
+    xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 400) {
+            var place = JSON.parse(xhr.responseText);
+            fillInAssocForm(place.result);
+        } else {
+            console.error('Erreur lors de l\'appel AJAX :', xhr.statusText);
+        }
+    };
 
-    var locality = getLocalityFromAdressComponents(place.address_components);
+    xhr.onerror = function () {
+        console.error('Erreur réseau lors de l\'appel AJAX');
+    };
 
-    if (place.place_id) {
-        document.getElementById("Assoc_placeId").value = place.place_id;
-    }
+    xhr.send();
+}
+
+function fillInAssocForm(place) {
+
+    document.getElementById("Assoc_placeId").value = place.place_id;
 
     if (place.name) {
         document.getElementById("Assoc_nom").value = place.name;
@@ -39,6 +62,16 @@ function fillInAssoc() {
         document.getElementById("Assoc_adresse").value = place.formatted_address;
     }
 
+    if (place.editorial_summary) {
+        var description = document.querySelector('[input=Assoc_description]');
+        description.editor.insertString(place.editorial_summary.overview);
+    }
+
+    if (place.wheelchair_accessible_entrance) {
+        var accesPmr = document.getElementById("Assoc_accesPmr");
+        accesPmr.checked = place.wheelchair_accessible_entrance;
+    }
+
     if (place.formatted_phone_number) {
         document.getElementById("Assoc_telephone").value =
             place.formatted_phone_number;
@@ -46,20 +79,26 @@ function fillInAssoc() {
 
     if (place.geometry) {
         document.getElementById("Assoc_longitude").value =
-            place.geometry.location.lng();
+            place.geometry.location.lng;
         document.getElementById("Assoc_latitude").value =
-            place.geometry.location.lat();
+            place.geometry.location.lat;
     }
 
-    if (locality) {
-        var select = document.getElementById('Assoc_ville');
-        var control = select.tomselect;
-        var value = Object.keys(control.options).find((key) => {
-            return control.options[key].text.toUpperCase() === locality.toUpperCase();
-        });
+    if (place.address_components) {
+        var locality = getLocalityFromAdressComponents(place.address_components);
 
-        if (value) {
-            control.addItem(value);
+        if (locality) {
+
+            var select = document.getElementById('Assoc_ville');
+
+            var control = select.tomselect;
+            var value = Object.keys(control.options).find((key) => {
+                return control.options[key].text.toUpperCase() === locality.toUpperCase();
+            });
+
+            if (value) {
+                control.addItem(value);
+            }
         }
     }
 
