@@ -8,9 +8,9 @@ class GoogleMapsPlacesService
 {
     private $httpClient;
 
-    public function __construct(HttpClientInterface $plansApiClient)
+    public function __construct(HttpClientInterface $placesApiClient)
     {
-        $this->httpClient = $plansApiClient;
+        $this->httpClient = $placesApiClient;
     }
 
     public function getPlaceDetails(String $placeId): array
