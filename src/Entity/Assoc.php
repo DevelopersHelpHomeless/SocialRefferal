@@ -199,6 +199,10 @@ class Assoc
      */
     private $logoFilename;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $placeId;
 
     public function __construct()
     {
@@ -329,6 +333,18 @@ class Assoc
     public function setVille(?Ville $ville): self
     {
         $this->ville = $ville;
+
+        return $this;
+    }
+
+    public function getPlaceId(): ?string
+    {
+        return $this->placeId;
+    }
+
+    public function setPlaceId(?string $placeId): self
+    {
+        $this->placeId = $placeId;
 
         return $this;
     }

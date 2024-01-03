@@ -1,4 +1,5 @@
 .idea/
+.env.local
 /.env.test
 
 ###> symfony/framework-bundle ###
@@ -32,3 +33,5 @@
 #/.env
 
 /public/upload/
+
+.DS_Store
