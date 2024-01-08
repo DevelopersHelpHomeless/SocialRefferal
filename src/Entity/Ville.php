@@ -53,6 +53,11 @@ class Ville
      */
     private $assocs;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=State::class, inversedBy="cities")
+     */
+    private $state;
+
     public function __construct()
     {
         $this->assocs = new ArrayCollection();
@@ -117,6 +122,18 @@ class Ville
                 $assoc->setVille(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getState(): ?State
+    {
+        return $this->state;
+    }
+
+    public function setState(?State $state): self
+    {
+        $this->state = $state;
 
         return $this;
     }

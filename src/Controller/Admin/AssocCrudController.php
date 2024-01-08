@@ -51,7 +51,7 @@ class AssocCrudController extends AbstractCrudController
             TelephoneField::new('telephone'),
             ImageField::new('logoFilename', 'Logo')
                 ->setBasePath(Assoc::LOGO_PATH)
-                ->setUploadDir('/public' . Assoc::LOGO_PATH)
+                ->setUploadDir('/public'.Assoc::LOGO_PATH)
                 ->setFormType(FileUploadType::class)
                 ->setUploadedFileNamePattern('[randomhash].[extension]')
                 ->setRequired(false),
@@ -91,7 +91,7 @@ class AssocCrudController extends AbstractCrudController
                 ->setEntryIsComplex(true)
                 ->setEntryType(OuvertureType::class)
                 ->setFormTypeOptions([
-                    'by_reference' => 'false'
+                    'by_reference' => 'false',
                 ]),
             HiddenField::new('placeId'),
         ];

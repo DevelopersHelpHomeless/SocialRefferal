@@ -32,6 +32,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Service\Generic\Entity\EntityBaseTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -101,6 +103,7 @@ class User extends BaseUser
      */
     protected $roles;
 
+
     /**
      * @var string|null
      *
@@ -149,11 +152,37 @@ class User extends BaseUser
      */
     private $newsletter;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Ville::class)
+     */
+    private $accessedCities;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Assoc::class)
+     */
+    private $associationsAccessed;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=State::class, inversedBy="users")
+     */
+    private $accessedStates;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Country::class, inversedBy="users")
+     */
+    private $accessedCountries;
+
+
+
 
     public function __construct()
     {
         parent::__construct();
         $this->setEnabled(true);
+        $this->accessedCities = new ArrayCollection();
+        $this->associationsAccessed = new ArrayCollection();
+        $this->accessedStates = new ArrayCollection();
+        $this->accessedCountries = new ArrayCollection();
     }
 
     public function getLastname(): ?string
@@ -227,4 +256,102 @@ class User extends BaseUser
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Ville>
+     */
+    public function getAccessedCities(): Collection
+    {
+        return $this->accessedCities;
+    }
+
+    public function addAccessedCity(Ville $accessedCity): self
+    {
+        if (!$this->accessedCities->contains($accessedCity)) {
+            $this->accessedCities[] = $accessedCity;
+        }
+
+        return $this;
+    }
+
+    public function removeAccessedCity(Ville $accessedCity): self
+    {
+        $this->accessedCities->removeElement($accessedCity);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Assoc>
+     */
+    public function getAssociationsAccessed(): Collection
+    {
+        return $this->associationsAccessed;
+    }
+
+    public function addAssociationsAccessed(Assoc $associationsAccessed): self
+    {
+        if (!$this->associationsAccessed->contains($associationsAccessed)) {
+            $this->associationsAccessed[] = $associationsAccessed;
+        }
+
+        return $this;
+    }
+
+    public function removeAssociationsAccessed(Assoc $associationsAccessed): self
+    {
+        $this->associationsAccessed->removeElement($associationsAccessed);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|State[]
+     */
+    public function getAccessedStates(): Collection
+    {
+        return $this->accessedStates;
+    }
+
+    public function addAccessedState(State $accessedState): self
+    {
+        if (!$this->accessedStates->contains($accessedState)) {
+            $this->accessedStates[] = $accessedState;
+        }
+
+        return $this;
+    }
+
+    public function removeAccessedState(State $accessedState): self
+    {
+        $this->accessedStates->removeElement($accessedState);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Country[]
+     */
+    public function getAccessedCountries(): Collection
+    {
+        return $this->accessedCountries;
+    }
+
+    public function addAccessedCountry(Country $accessedCountry): self
+    {
+        if (!$this->accessedCountries->contains($accessedCountry)) {
+            $this->accessedCountries[] = $accessedCountry;
+        }
+
+        return $this;
+    }
+
+    public function removeAccessedCountry(Country $accessedCountry): self
+    {
+        $this->accessedCountries->removeElement($accessedCountry);
+
+        return $this;
+    }
+
+
 }
